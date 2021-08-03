@@ -78,8 +78,7 @@ def process_args():
 
     src = args.src if args.src else getcwd()
     dst = args.dest if args.dest else getenv('HOME')
-    src = src[:-1] if src[-1] == '/' else src
-    dst = dst[:-1] if dst[-1] == '/' else dst
+    for d in ['src', 'dst']: exec(f"{d} = {d}.rstrip('/')")
 
     if args.ask:
         action = 'test' if args.dryrun else 'do_something'
