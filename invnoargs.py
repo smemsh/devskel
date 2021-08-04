@@ -49,6 +49,7 @@ if __name__ == "__main__":
     args = argv[1:]
 
     try:
+        from bdb import BdbQuit
         if bool(environ['DEBUG']):
             from pprint import pprint as pp
             debug = True
@@ -61,4 +62,5 @@ if __name__ == "__main__":
 
     if debug: breakpoint()
 
-    main()
+    try: main()
+    except BdbQuit: bomb("debug stop")
