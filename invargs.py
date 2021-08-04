@@ -147,4 +147,4 @@ if __name__ == "__main__":
         debug = False
 
     try: main()
-    except BdbQuit: bomb("debug stop")
+    except BdbQuit: bomb("debug-stop")
