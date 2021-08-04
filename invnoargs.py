@@ -31,6 +31,8 @@ def exe(cmd):
 
 def main():
 
+    if debug: breakpoint()
+
     try: subprogram = globals()[invname]
     except (KeyError, TypeError):
         bomb(f"unimplemented command '{invname}'")
@@ -59,8 +61,6 @@ if __name__ == "__main__":
 
     except KeyError:
         debug = False
-
-    if debug: breakpoint()
 
     try: main()
     except BdbQuit: bomb("debug stop")
