@@ -10,7 +10,7 @@ from os.path import basename,
 from subprocess import check_output
 
 from os import (
-    environ,
+    getenv,
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE
 )
@@ -47,20 +47,16 @@ if __name__ == "__main__":
     if hexversion < 0x03090000:
         bomb("minimum python 3.9")
 
+    from bdb import BdbQuit
+    if bool(getenv('DEBUG')):
+        from pprint import pp
+        debug = True
+        err('debug-mode-enabled')
+    else:
+        debug = False
+
     invname = basename(argv[0])
     args = argv[1:]
-
-    try:
-        from bdb import BdbQuit
-        if bool(environ['DEBUG']):
-            from pprint import pp
-            debug = True
-            err('debug-mode-enabled')
-        else:
-            raise KeyError
-
-    except KeyError:
-        debug = False
 
     try: main()
     except BdbQuit: bomb("debug-stop")

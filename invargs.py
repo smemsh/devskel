@@ -15,7 +15,7 @@ from tty import setraw
 
 from os.path import basename, dirname, isdir, exists
 from os import (
-    getenv, environ,
+    getenv,
     getcwd, chdir, makedirs,
     access, W_OK,
     EX_OK as EXIT_SUCCESS,
@@ -131,20 +131,16 @@ if __name__ == "__main__":
     if hexversion < 0x03090000:
         bomb("minimum python 3.9")
 
+    from bdb import BdbQuit
+    if bool(getenv('DEBUG')):
+        from pprint import pp
+        debug = True
+        err('debug-mode-enabled')
+    else:
+        debug = False
+
     invname = basename(argv[0])
     args = argv[1:]
-
-    try:
-        from bdb import BdbQuit
-        if bool(environ['DEBUG']):
-            from pprint import pp
-            debug = True
-            err('debug-mode-enabled')
-        else:
-            raise KeyError
-
-    except KeyError:
-        debug = False
 
     try: main()
     except BdbQuit: bomb("debug-stop")
