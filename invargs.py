@@ -137,7 +137,7 @@ if __name__ == "__main__":
     try:
         from bdb import BdbQuit
         if bool(environ['DEBUG']):
-            from pprint import pprint as pp
+            from pprint import pp
             debug = True
             err('debug-mode-enabled')
         else:
