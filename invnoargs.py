@@ -35,7 +35,7 @@ def exe(cmd):
 
 def main():
 
-    if debug: breakpoint()
+    if debug == 1: breakpoint()
 
     try: subprogram = globals()[invname]
     except (KeyError, TypeError):
@@ -52,12 +52,10 @@ if __name__ == "__main__":
         bomb("minimum python 3.9")
 
     from bdb import BdbQuit
-    if bool(getenv('DEBUG')):
+    debug = int(getenv('DEBUG') or 0)
+    if debug:
         from pprint import pp
-        debug = True
         err('debug: enabled')
-    else:
-        debug = False
 
     invname = basename(argv[0])
     args = argv[1:]
