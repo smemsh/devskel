@@ -31,6 +31,10 @@ def bomb(*args):
     err(*args)
     exit(EXIT_FAILURE)
 
+def dprint(*args, **kwargs):
+    if not debug: return
+    err('debug:', *args, **kwargs)
+
 def exe(cmd):
     return check_output(cmd.split()).splitlines()
 
