@@ -139,7 +139,7 @@ if __name__ == "__main__":
     if bool(getenv('DEBUG')):
         from pprint import pp
         debug = True
-        err('debug-mode-enabled')
+        err('debug: enabled')
     else:
         debug = False
 
@@ -147,4 +147,4 @@ if __name__ == "__main__":
     args = argv[1:]
 
     try: main()
-    except BdbQuit: bomb("debug-stop")
+    except BdbQuit: bomb("debug: stop")
