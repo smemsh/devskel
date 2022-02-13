@@ -54,7 +54,10 @@ def process_args():
         p.add_argument(*options, action='store_true', help=help, **kwargs)
 
     def addarg(p, vname, vdesc, help=None, /, **kwargs):
-        p.add_argument(vname, nargs='?', metavar=vdesc, help=help, **kwargs)
+        p.add_argument(vname, metavar=vdesc, help=help, **kwargs)
+
+    def addargs(*args, **kwargs):
+        addarg(*args, nargs='*', **kwargs)
 
     def getchar():
         fd = stdin.fileno()
