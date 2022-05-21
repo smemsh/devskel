@@ -62,6 +62,9 @@ def process_args():
     def addopts(*args, **kwargs):
         addopt(*args, action='store', **kwargs)
 
+    def addtogg(*args, **kwargs):
+        addopt(*args, action=argparse.BooleanOptionalAction, **kwargs)
+
     def addargs(*args, **kwargs):
         addarg(*args, nargs='*', **kwargs)
 
