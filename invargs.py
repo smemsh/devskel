@@ -27,8 +27,8 @@ from os import (
 def err(*args, **kwargs):
     print(*args, file=stderr, **kwargs)
 
-def bomb(*args):
-    err(*args)
+def bomb(*args, **kwargs):
+    err(*args, **kwargs)
     exit(EXIT_FAILURE)
 
 def dprint(*args, **kwargs):
