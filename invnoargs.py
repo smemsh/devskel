@@ -46,7 +46,14 @@ def main():
     except (KeyError, TypeError):
         bomb(f"unimplemented command '{invname}'")
 
-    instcnt = subprogram()
+    try: return subprogram()
+    finally: # needed for use in pipelines, see cpython issue 55589
+        try: stdout.flush()
+        finally:
+            try: stdout.close()
+            finally:
+                try: stderr.flush()
+                finally: stderr.close()
 
 ###
 
