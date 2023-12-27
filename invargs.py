@@ -143,7 +143,7 @@ def main():
         bomb(f"unimplemented command '{invname}'")
 
     try: return subprogram(src, dst)
-    finally: # needed for use in pipelines, see cpython issue 55589
+    finally: # cpython bug 55589
         try: stdout.flush()
         finally:
             try: stdout.close()
