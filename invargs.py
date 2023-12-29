@@ -5,20 +5,22 @@ __url__     = 'http://smemsh.net/src/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
 
-import argparse
+import argparse # tmpl args
 
 from sys import argv, stdin, stdout, stderr, exit
 from subprocess import check_output
 
+# tmpl getchar
 from termios import tcgetattr, tcsetattr, TCSADRAIN
 from tty import setraw
 
-from os.path import basename, dirname, isdir, exists
+from os.path import basename
+from os.path import dirname, isdir, exists # tmpl args
 from os import (
     getenv,
-    getcwd, chdir, makedirs,
-    access, W_OK,
-    close as osclose,
+    getcwd, chdir, makedirs, # tmpl dirs
+    access, W_OK, # tmpl args
+    close as osclose, # tmpl filter
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE,
 )
@@ -46,6 +48,7 @@ def exe(cmd):
 
 ###
 
+# tmpl args
 def process_args():
 
     global args
@@ -69,6 +72,7 @@ def process_args():
     def addargs(*args, **kwargs):
         addarg(*args, nargs='*', **kwargs)
 
+    # tmpl getchar
     def getchar():
         fd = stdin.fileno()
         tattrs = tcgetattr(fd)
@@ -86,6 +90,8 @@ def process_args():
     addflag (p, 'n', 'test', dest='dryrun')
     addflag (p, 'q', 'quiet')
     addflag (p, 'f', 'force')
+
+    # tmpl dirs
     addarg  (p, 'src', 'srcdir')
     addarg  (p, 'dest', 'destdir')
 
@@ -98,10 +104,12 @@ def process_args():
     if args.dryrun and args.force:
         bomb("the force is not with you")
 
+    # tmpl dirs
     src = args.src if args.src else getcwd()
     dst = args.dest if args.dest else getenv('HOME')
     for d in ['src', 'dst']: exec(f"{d} = {d}.rstrip('/')")
 
+    # tmpl getchar
     if args.ask:
         action = 'test' if args.dryrun else 'do_something'
         print(f"{action} '{src}/ -> '{dst}/' (y/n)? ", end='')
@@ -109,9 +117,11 @@ def process_args():
         yn = getchar(); print(yn)
         if yn != 'y': bomb('aborting')
 
+    # tmpl dirs
     return abspath(src), abspath(dst)
 
 
+# tmpl dirs
 def check_sanity(src, dst):
 
     if not isdir(src):
@@ -133,9 +143,11 @@ def main():
 
     if debug == 1: breakpoint()
 
+    # tmpl args
     src, dst = process_args()
     check_sanity(src, dst)
 
+    # tmpl dirs
     try: chdir(src)
     except: bomb(f"cannot change directory to '{src}'")
 
@@ -160,6 +172,7 @@ if __name__ == "__main__":
     if hexversion < 0x03090000:
         bomb("minimum python 3.9")
 
+    # tmpl filter
     # for filters, save stdin, pdb needs stdio fds itself
     if select([sys.stdin], [], [], None)[0]:
         inbuf = sys.stdin.read() # todo: problematic with large inputs
