@@ -174,10 +174,10 @@ if __name__ == "__main__":
 
     # tmpl filter
     # for filters, save stdin, pdb needs stdio fds itself
-    if select([sys.stdin], [], [], None)[0]:
-        inbuf = sys.stdin.read() # todo: problematic with large inputs
-        osclose(sys.stdin.fileno()) # cpython bug 73582
-        try: sys.stdin = open('/dev/tty')
+    if select([stdin], [], [], None)[0]:
+        inbuf = stdin.read() # todo: problematic with large inputs
+        osclose(stdin.fileno()) # cpython bug 73582
+        try: stdin = open('/dev/tty')
         except: pass # no ctty, but then pdb would not be in use
     else:
         bomb("must supply input on stdin")
