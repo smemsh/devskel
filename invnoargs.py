@@ -11,6 +11,7 @@ from subprocess import check_output
 
 from os import (
     getenv,
+    close as osclose
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE
 )
@@ -62,6 +63,15 @@ if __name__ == "__main__":
     from sys import hexversion
     if hexversion < 0x03090000:
         bomb("minimum python 3.9")
+
+    # for filters, save stdin, pdb needs stdio fds itself
+    if select([sys.stdin], [], [], None)[0]:
+        inbuf = sys.stdin.read() # todo: problematic with large inputs
+        os.close(sys.stdin.fileno()) # cpython bug 73582
+        try: sys.stdin = open('/dev/tty')
+        except: pass # no ctty, but then pdb would not be in use
+    else:
+        bomb("must supply input on stdin")
 
     from bdb import BdbQuit
     debug = int(getenv('DEBUG') or 0)
