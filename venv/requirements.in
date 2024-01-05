@@ -1,0 +1,7 @@
+#
+# example
+# cf: https://pip.pypa.io/en/stable/reference/requirements-file-format/
+# todo: switch to a pyproject.toml key once we get to python 3.11
+
+# foo
+pkgfoo          == 1.2.3
