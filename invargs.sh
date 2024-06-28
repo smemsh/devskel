@@ -13,7 +13,7 @@
 #   more help text on invocation 2
 #
 # scott@smemsh.net
-# http://smemsh.net/src/utilsh/
+# https://github.com/smemsh/devskel/
 # http://spdx.org/licenses/GPL-2.0
 #
 
