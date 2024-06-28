@@ -14,7 +14,7 @@
 #
 # scott@smemsh.net
 # https://github.com/smemsh/devskel/
-# http://spdx.org/licenses/GPL-2.0
+# https://spdx.org/licenses/GPL-2.0
 #
 
 setenv  () { local v=$1; shift; IFS= eval $v="\$*"; }
