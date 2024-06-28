@@ -95,3 +95,17 @@ main ()
 startdir=$HOME
 invname=${0##*/}
 invdir=${0%/*}
+
+# for wrappers with same name as wrapped, only works if not a symlink
+savedpath=$PATH
+cmdpath=${BASH_SOURCE%/*}
+PATH=$(
+	IFS=:
+	newpath=($PATH)
+	for ((i = 0; i < ${#newpath[@]}; i++))
+	do if [[ ${newpath[i]} == "$cmdpath" ]]
+	then unset 'newpath[i]'; break; fi; done
+	printf "${newpath[*]}"
+)
+realexe=$(type -P $invname)
+PATH=$savedpath
