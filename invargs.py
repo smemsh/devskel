@@ -56,6 +56,12 @@ def process_args():
 
     global args
 
+    def usagex(*args, **kwargs):
+        nonlocal p
+        p.print_help(file=stderr)
+        print(file=stderr)
+        bomb(*args, **kwargs)
+
     def addopt(p, flagchar, longopt, help=None, /, **kwargs):
         options = list(("-%s --%s" % (flagchar, longopt)).split())
         p.add_argument(*options, help=help, **kwargs)
