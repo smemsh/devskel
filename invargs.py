@@ -7,7 +7,10 @@ __license__ = 'GPL-2.0'
 
 import argparse # tmpl args
 
-from sys import argv, stdin, stdout, stderr, exit
+from sys import exit, hexversion
+if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
+
+from sys import argv, stdin, stdout, stderr
 from subprocess import check_output
 
 # tmpl getchar
@@ -167,10 +170,6 @@ def main():
 ###
 
 if __name__ == "__main__":
-
-    from sys import hexversion
-    if hexversion < 0x03090000:
-        bomb("minimum python 3.9")
 
     # tmpl filter
     # for filters, save stdin, pdb needs stdio fds itself
