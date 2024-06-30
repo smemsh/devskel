@@ -62,6 +62,11 @@ def process_args():
         print(file=stderr)
         bomb(*args, **kwargs)
 
+    # parse_args() gives escaped strings
+    def unesc(s):
+        if s is None: return
+        else: return s.encode('raw-unicode-escape').decode('unicode-escape')
+
     def addopt(p, flagchar, longopt, help=None, /, **kwargs):
         options = list(("-%s --%s" % (flagchar, longopt)).split())
         p.add_argument(*options, help=help, **kwargs)
