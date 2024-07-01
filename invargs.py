@@ -187,7 +187,9 @@ def main():
 
     try: subprogram = globals()[invname]
     except (KeyError, TypeError):
-        bomb(f"unimplemented command '{invname}'")
+        from inspect import trace
+        if len(trace()) == 1: bomb("unimplemented")
+        else: raise
 
     try: return subprogram(src, dst)
     finally: # cpython bug 55589
