@@ -11,6 +11,7 @@ from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 
 from sys import argv, stdin, stdout, stderr
+from traceback import print_exc
 from subprocess import check_output
 
 # tmpl getchar
@@ -191,14 +192,7 @@ def main():
         if len(trace()) == 1: bomb("unimplemented")
         else: raise
 
-    try: return subprogram(src, dst)
-    finally: # cpython bug 55589
-        try: stdout.flush()
-        finally:
-            try: stdout.close()
-            finally:
-                try: stderr.flush()
-                finally: stderr.close()
+    return subprogram(src, dst)
 
 ###
 
@@ -225,3 +219,12 @@ if __name__ == "__main__":
 
     try: main()
     except BdbQuit: bomb("debug: stop")
+    except:
+        print_exc(file=stderr)
+    finally: # cpython bug 55589
+        try: stdout.flush()
+        finally:
+            try: stdout.close()
+            finally:
+                try: stderr.flush()
+                finally: stderr.close()
