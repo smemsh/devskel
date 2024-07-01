@@ -86,6 +86,9 @@ def process_args():
     def addargs(*args, **kwargs):
         addarg(*args, nargs='*', **kwargs)
 
+    def hasopt(*options):
+        return any([getattr(args, a) for a in [*options]])
+
     # tmpl getchar
     def getchar():
         fd = stdin.fileno()
