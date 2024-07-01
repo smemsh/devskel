@@ -174,7 +174,8 @@ def check_sanity(src, dst):
 
 def main():
 
-    if debug == 1: breakpoint()
+    if debug == 1:
+        breakpoint()
 
     # tmpl args
     src, dst = process_args()
