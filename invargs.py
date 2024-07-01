@@ -95,11 +95,27 @@ def process_args():
         tcsetattr(fd, TCSADRAIN, tattrs)
         return c
 
+    # tmpl
+    # avoid initial 'usage:' line by providing as formatter_class and
+    # providing empty string for 'usage'.  not clear why the interface
+    # gives a prefix arg and defaults it, but doesn't allow it to be
+    # passed in from anywhere, so we have to override
+    #
+    class RawTextHelpFormatterEmptyUsageLine(argparse.RawTextHelpFormatter):
+        def add_usage(self, usage, actions, groups, prefix=None):
+            if prefix is None:
+                prefix = ''
+            return super(RawTextHelpFormatterEmptyUsageLine, self) \
+                .add_usage(usage, actions, groups, prefix)
+
     p = argparse.ArgumentParser(
         prog            = invname,
         description     = __doc__.strip(),
         allow_abbrev    = False,
         formatter_class = argparse.RawTextHelpFormatter,
+        # tmpl
+        #formatter_class = RawTextHelpFormatterEmptyUsageLine,
+        #usage           = "",
     )
     addflag (p, 'n', 'test', dest='dryrun')
     addflag (p, 'q', 'quiet')
