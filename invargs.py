@@ -219,6 +219,7 @@ if __name__ == "__main__":
 
     try: main()
     except BdbQuit: bomb("debug: stop")
+    except SystemExit: raise
     except:
         print_exc(file=stderr)
     finally: # cpython bug 55589
