@@ -22,7 +22,8 @@ from tty import setraw
 from os.path import basename
 from os.path import dirname, isdir, exists # tmpl args
 from os import (
-    getenv, isatty,
+    getenv,
+    isatty, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
     access, W_OK, # tmpl args
     close as osclose, # tmpl filter
