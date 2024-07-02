@@ -211,6 +211,7 @@ if __name__ == "__main__":
     from bdb import BdbQuit
     debug = int(getenv('DEBUG') or 0)
     if debug:
+        import pdb
         from pprint import pp
         err('debug: enabled')
 
@@ -223,6 +224,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt: bomb("interrupted")
     except:
         print_exc(file=stderr)
+        if debug: pdb.post_mortem()
     finally: # cpython bug 55589
         try: stdout.flush()
         finally:
