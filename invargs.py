@@ -23,7 +23,7 @@ from os.path import basename
 from os.path import dirname, isdir, exists # tmpl args
 from os import (
     getenv,
-    isatty, # tmpl filter
+    isatty, dup, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
     access, W_OK, # tmpl args
     close as osclose, # tmpl filter
@@ -201,10 +201,11 @@ def main():
 if __name__ == "__main__":
 
     # tmpl filter
-    # for filters, save stdin, pdb needs stdio fds itself
-    if not isatty(stdin.fileno()) and select([stdin], [], [])[0]:
-        inbuf = stdin.read() # todo: problematic with large inputs
-        osclose(stdin.fileno()) # cpython bug 73582
+    # move stdin, pdb needs stdio fds itself
+    stdinfd = stdin.fileno()
+    if not isatty(stdinfd) and select([stdin], [], [])[0]:
+        infile = open(dup(stdinfd))
+        osclose(stdinfd) # cpython bug 73582
         try: stdin = open('/dev/tty')
         except: pass # no ctty, but then pdb would not be in use
     else:
