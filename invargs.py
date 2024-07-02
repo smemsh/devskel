@@ -11,6 +11,7 @@ from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 
 from sys import argv, stdin, stdout, stderr
+from select import select
 from traceback import print_exc
 from subprocess import check_output
 
