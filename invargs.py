@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     # tmpl filter
     # for filters, save stdin, pdb needs stdio fds itself
-    if select([stdin], [], [], None)[0]:
+    if select([stdin], [], [], 0)[0]:
         inbuf = stdin.read() # todo: problematic with large inputs
         osclose(stdin.fileno()) # cpython bug 73582
         try: stdin = open('/dev/tty')
