@@ -200,6 +200,9 @@ def main():
 
 if __name__ == "__main__":
 
+    invname = basename(argv[0])
+    args = argv[1:]
+
     # tmpl filter
     # move stdin, pdb needs stdio fds itself
     stdinfd = stdin.fileno()
@@ -217,9 +220,6 @@ if __name__ == "__main__":
         import pdb
         from pprint import pp
         err('debug: enabled')
-
-    invname = basename(argv[0])
-    args = argv[1:]
 
     try: main()
     except BdbQuit: bomb("debug: stop")
