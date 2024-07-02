@@ -22,7 +22,7 @@ from tty import setraw
 from os.path import basename
 from os.path import dirname, isdir, exists # tmpl args
 from os import (
-    getenv,
+    getenv, isatty,
     getcwd, chdir, makedirs, # tmpl dirs
     access, W_OK, # tmpl args
     close as osclose, # tmpl filter
@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     # tmpl filter
     # for filters, save stdin, pdb needs stdio fds itself
-    if select([stdin], [], [], 0)[0]:
+    if not isatty(stdin.fileno()) and select([stdin], [], [])[0]:
         inbuf = stdin.read() # todo: problematic with large inputs
         osclose(stdin.fileno()) # cpython bug 73582
         try: stdin = open('/dev/tty')
