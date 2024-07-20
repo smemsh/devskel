@@ -215,7 +215,7 @@ if __name__ == "__main__":
         bomb("must supply input on stdin")
 
     from bdb import BdbQuit
-    if debug := int(getenv('DEBUG') or 0)
+    if debug := int(getenv('DEBUG') or 0):
         import pdb
         from pprint import pp
         err('debug: enabled')
