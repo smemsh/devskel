@@ -22,7 +22,7 @@ from tty import setraw
 from os.path import basename
 from os.path import dirname, isdir, exists # tmpl args
 from os import (
-    getenv,
+    getenv, unsetenv,
     isatty, dup, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
     access, W_OK, # tmpl args
@@ -220,6 +220,7 @@ if __name__ == "__main__":
         import pdb
         from pprint import pp
         err('debug: enabled')
+        unsetenv('DEBUG') # otherwise forked children hang
 
     try: main()
     except BdbQuit: bomb("debug: stop")
