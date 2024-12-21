@@ -51,6 +51,8 @@ def dprintvar(name, vars):
 
 def exe(cmd):
     return check_output(cmd.split()).splitlines()
+    # if the lines should be decoded into strings rather than bytes
+    #return check_output(cmd.split(), text=True).splitlines()
 
 ###
 
