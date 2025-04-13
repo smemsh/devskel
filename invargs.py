@@ -237,4 +237,5 @@ if __name__ == "__main__":
             try: stdout.close()
             finally:
                 try: stderr.flush()
+                except: pass
                 finally: stderr.close()
