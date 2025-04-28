@@ -20,12 +20,12 @@ from termios import tcgetattr, tcsetattr, TCSADRAIN
 from tty import setraw
 
 from os.path import basename
-from os.path import dirname, isdir, exists # tmpl args
+from os.path import dirname, isdir, exists # tmpl dirs
 from os import (
     getenv, unsetenv,
     isatty, dup, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
-    access, W_OK, # tmpl args
+    access, W_OK, # tmpl dirs
     close as osclose, # tmpl filter
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE,
