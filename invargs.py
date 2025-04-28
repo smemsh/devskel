@@ -212,9 +212,9 @@ if __name__ == "__main__":
         try:
             if select([stdin], [], [])[0]:
                 infile = open(dup(stdinfd))
-                osclose(stdinfd) # cpython bug 73582
+                osclose(stdinfd)  # cpython bug 73582
                 try: stdin = open('/dev/tty')
-                except: pass # no ctty, but then pdb would not be in use
+                except: pass  # no ctty, but then pdb would not be in use
         except KeyboardInterrupt:
             bomb("interrupted")
     else:
@@ -225,7 +225,7 @@ if __name__ == "__main__":
         import pdb
         from pprint import pp
         err('debug: enabled')
-        unsetenv('DEBUG') # otherwise forked children hang
+        unsetenv('DEBUG')  # otherwise forked children hang
 
     try: main()
     except BdbQuit: bomb("debug: stop")
@@ -235,7 +235,7 @@ if __name__ == "__main__":
         print_exc(file=stderr)
         if debug: pdb.post_mortem()
         else: bomb("aborting...")
-    finally: # cpython bug 55589
+    finally:  # cpython bug 55589
         try: stdout.flush()
         finally:
             try: stdout.close()
