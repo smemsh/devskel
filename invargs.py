@@ -4,6 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
+__devskel__ = 0x8c1992e
 
 import argparse # tmpl args
 
