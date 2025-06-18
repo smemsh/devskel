@@ -11,7 +11,7 @@ import argparse # tmpl args
 from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 
-from sys import argv, stdin, stdout, stderr # tmpl filter (stdin)
+from sys import argv, stdin, stdout, stderr # tmpl filter, getchar (stdin)
 from select import select # tmpl filter
 from traceback import print_exc
 from subprocess import check_output
