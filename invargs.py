@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.7.1'
+__devskel__ = '0.7.2'
 
 import argparse # tmpl args
 
@@ -86,6 +86,9 @@ def process_args():
 
     def addtogg(*args, **kwargs):
         addopt(*args, action=argparse.BooleanOptionalAction, **kwargs)
+
+    def addnarg(*args, **kwargs):
+        addarg(*args, nargs='?', **kwargs)
 
     def addargs(*args, **kwargs):
         addarg(*args, nargs='*', **kwargs)
