@@ -17,7 +17,7 @@ from sys import stdin # tmpl filter, getchar
 from sys import stdout, stderr
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
-from subprocess import check_output
+from subprocess import check_output # tmpl exe
 
 from os.path import basename
 from os.path import dirname, isdir, exists # tmpl dirs
@@ -49,6 +49,7 @@ def dprintvar(name, vars):
     err(f"debug: {name}")
     pp(vars[name])
 
+# tmpl exe
 def exe(cmd):
     return check_output(cmd.split()).splitlines()
     # if the lines should be decoded into strings rather than bytes
