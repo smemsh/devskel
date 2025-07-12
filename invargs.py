@@ -6,10 +6,10 @@ __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
 __devskel__ = '0.7.2'
 
-import argparse # tmpl args
-
 from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
+
+import argparse # tmpl args
 
 from tty import setraw # tmpl getchar
 from sys import argv, stdin, stdout, stderr # tmpl filter, getchar (stdin)
