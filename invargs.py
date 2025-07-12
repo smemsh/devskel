@@ -25,7 +25,7 @@ from os import (
     getenv, unsetenv,
     isatty, dup, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
-    access, W_OK, # tmpl dirs
+    access, R_OK, W_OK, # tmpl dirs
     close as osclose, # tmpl filter
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE,
