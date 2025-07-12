@@ -17,7 +17,6 @@ from sys import stdin # tmpl filter, getchar
 from sys import stdout, stderr
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
-from traceback import print_exc
 from subprocess import check_output
 
 from os.path import basename
@@ -236,6 +235,7 @@ if __name__ == "__main__":
     except SystemExit: raise
     except KeyboardInterrupt: bomb("interrupted")
     except:
+        from traceback import print_exc
         print_exc(file=stderr)
         if debug: pdb.post_mortem()
         else: bomb("aborting...")
