@@ -12,7 +12,9 @@ if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
 import argparse # tmpl args
 
 from tty import setraw # tmpl getchar
-from sys import argv, stdin, stdout, stderr # tmpl filter, getchar (stdin)
+from sys import argv # tmpl args
+from sys import stdin # tmpl filter, getchar
+from sys import stdout, stderr
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
 from traceback import print_exc
