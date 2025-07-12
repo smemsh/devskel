@@ -20,7 +20,7 @@ from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
 from subprocess import check_output # tmpl exe
 
 from os.path import basename
-from os.path import dirname, isdir, exists # tmpl dirs
+from os.path import dirname, isdir, exists, abspath # tmpl dirs
 from os import (
     getenv, unsetenv,
     isatty, dup, # tmpl filter
