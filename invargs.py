@@ -50,8 +50,8 @@ def dprintvar(name, vars):
     pp(vars[name])
 
 # tmpl exe
-def exe(cmd):
-    return check_output(cmd.split()).splitlines()
+def exe(cmd, **kwargs):
+    return check_output(cmd.split(), **kwargs).splitlines()
     # if the lines should be decoded into strings rather than bytes
     #return check_output(cmd.split(), text=True).splitlines()
 
