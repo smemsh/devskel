@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.7.4'
+__devskel__ = '0.8.0'
 
 from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
@@ -17,7 +17,8 @@ from sys import stdin # tmpl filter, getchar
 from sys import stdout, stderr
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
-from subprocess import check_output # tmpl exe
+from subprocess import check_output # tmpl exe1
+from subprocess import run, CalledProcessError # tmpl exe2
 
 from os.path import basename
 from os.path import dirname, isdir, exists, abspath # tmpl dirs
@@ -49,11 +50,27 @@ def dprintvar(name, vars):
     err(f"debug: {name}")
     pp(vars[name])
 
-# tmpl exe
+# tmpl exe1 simple
 def exe(cmd, **kwargs):
     return check_output(cmd.split(), **kwargs).splitlines()
     # if the lines should be decoded into strings rather than bytes
     #return check_output(cmd.split(), text=True).splitlines()
+
+# tmpl exe2 complex
+def exe(cmd, **kwargs):
+    #defaults = dict(capture_output=True, check=True) # default is bytes
+    defaults = dict(capture_output=True, check=True, text=True)
+    kwargs = defaults | kwargs
+    try: r = run(cmd.split(), **kwargs)
+    except CalledProcessError as e:
+        err(f"--> \"{cmd}\": returned {e.returncode}")
+        for iostream in 'stdout', 'stderr':
+            if buf := getattr(e, iostream):
+                err(f"--> {iostream}:\n{buf}")
+        bomb("aborting...")
+    except FileNotFoundError:
+        bomb(f"invocation failure: \"{cmd}\", aborting...")
+    return r.stdout # tmpl exe2
 
 ###
 
