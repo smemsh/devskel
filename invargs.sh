@@ -64,7 +64,7 @@ process_args ()
 
 	# 1/2
 	eval set -- $(getopt -n "${0##*/}" \
-		-o abcd -l opta,optb,optc,optd,help -- "$@")
+		-o abcdh -l opta,optb,optc,optd,help -- "$@")
 	# 2/2
 	while true; do case $1 in
 	(-a|--opta) opta=true; shift;;
