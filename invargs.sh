@@ -22,7 +22,7 @@ setarr  () { local v=$1; shift; eval $v=\(\"\$@\"\); }
 bomb    () { echo "${FUNCNAME[1]}: ${*}, aborting" >&2; false; exit; }
 err     () { echo "${FUNCNAME[1]}: ${*}" >&2; }
 
-flag    () { (((opts & $1) == $1)); }
+isset   () { ((opts & $1)); } # tmpl isset
 
 # text comes from comment header at top of script
 usage_until=invocation1:
@@ -45,41 +45,45 @@ usage ()
 
 process_args ()
 {
+	# tmpl isset
 	local n
-	opta=false
 	optb=$((1<<n++))
-	optc=$((1<<n++))
-	optd=$((1<<n++))
 
-	# 1/3 if using usagex()
-	usagex () { for line in "${use[@]}"; do echo "$line"; done >&2; exit; }
+	# 1/3 if tmpl _usagex()
 	use=(
-	"-a|--opta    description of opta option"
-	"-a|--optb    description of optb option"
-	"-a|--optc    description of optc option"
-	"-a|--optd    description of optd option"
-	"-h|--help    display help"
+	"-b|--opta description of optb via raw variable"
+	"-a|--optb description of opta via isset accessor" # tmpl isset
+	"-c [n] | --optc [n] description of optc with optional arg"
+	"-d <arg> | --optd <arg> description of optd with mandatory arg"
+	"-h|--help display help"
 	)
+	usagex () { _usagex "${use[@]}"; }
+	_usagex() { local a; for a; do err "$a"; done; false; exit; }
 
 	# 1/2
-	eval set -- $(getopt -n "${0##*/}" \
-		-o abcdh -l opta,optb,optc,optd,help -- "$@")
+	eval set -- $(getopt -n $invname \
+	-o habc::d: \
+	-l help,flaga,optb,optc::,optd: \
+	-- "$@")
+
 	# 2/2
 	while true; do case $1 in
-	(-a|--opta) opta=true; shift;;
-	(-c|--optb) let "opts |= $optb"; shift;;
-	(-d|--optc) let "opts |= $optc"; shift;;
-	(-d|--optd) let "opts |= $optd"; shift;;
-	(-h|--help) usagex;;
+	(-a|--optflag_a) let opta++; shift;;
+	(-b|--optflag_b) let "opts |= $optb"; shift;;
+	(-c|--optarg_c) shift; optc="${1:-default_value}"; shift;;
+	(-d|--optarg_d) shift; optd="${1}"; shift;;
+	(-h|--help) usage; true; exit;;
+	(-h|--help) cat <<- %
+		help text
+		%
+		bomb "read script for more usage";;
 	(--) shift; break;;
-	(*) echo "bad usage" >&2; false; return;;
+	(*) usagex;;
 	esac; done
 
-	if ! (((opts & (opts - 1)) == 0))
-	then echo "options [bcd] exclude each other" >&2; false; return; fi
-
-	if ! ((opts)) # default
-	then opts=$optb; fi
+	# tmpl isset
+	isset $optflag_a && isset $optflag_b &&
+		bomb "flags b and d are mutually exclusive"
 }
 
 check_sanity ()
