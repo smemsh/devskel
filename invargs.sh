@@ -23,7 +23,6 @@ bomb    () { echo "${FUNCNAME[1]}: ${*}, aborting" >&2; false; exit; }
 err     () { echo "${FUNCNAME[1]}: ${*}" >&2; }
 
 flag    () { (((opts & $1) == $1)); }
-flagstr () { flag $1 && printf true || printf false; }
 
 # text comes from comment header at top of script
 usage_until=invocation1:
