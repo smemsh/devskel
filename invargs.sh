@@ -26,7 +26,7 @@ flagstr () { flag $1 && printf true || printf false; }
 
 # text comes from comment header at top of script
 usage_until=invocation1:
-usage_exit () { usage; exit; }
+usagex () { usage; false; exit; }
 usage ()
 {
 	grep -B 999 -m 1 '^$' "$BASH_SOURCE"  | # until first blank
