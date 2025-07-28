@@ -72,7 +72,6 @@ process_args ()
 	(-d|--optc) let "opts |= $optc"; shift;;
 	(-d|--optd) let "opts |= $optd"; shift;;
 	(-h|--help) usagex;;
-	(-H|--HELP) usage_exit;;
 	(--) shift; break;;
 	(*) echo "bad usage" >&2; false; return;;
 	esac; done
