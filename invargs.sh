@@ -36,6 +36,13 @@ usage ()
 	cut -b 3-	# strip comment prefix
 }
 
+# works, but has blank line at the end despite my best efforts
+usage ()
+{
+	sed -n -r '/^#\s'$startusage'$/,${/^#\s'$endusage'$/q;s/^..?//;p}' \
+	$BASH_SOURCE
+}
+
 process_args ()
 {
 	local n
