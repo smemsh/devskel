@@ -84,6 +84,8 @@ process_args ()
 	# tmpl isset
 	isset $optflag_a && isset $optflag_b &&
 		bomb "flags b and d are mutually exclusive"
+
+	args=("$@")
 }
 
 check_sanity ()
@@ -98,7 +100,7 @@ main ()
 	cd "$startdir" || exit
 
 	if [[ $(declare -F $invname) ]]
-	then $invname "$@"
+	then $invname "${args[@]}"
 	else echo "unimplemented command '$invname'" >&2; fi
 }
 
