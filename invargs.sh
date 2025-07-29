@@ -97,14 +97,13 @@ main ()
 {
 	process_args "$@" || exit
 	check_sanity || exit
-	cd "$startdir" || exit
+	cd "${startdir:-$HOME}" || exit # tmpl startdir
 
 	if [[ $(declare -F $invname) ]]
 	then $invname "${args[@]}"
 	else echo "unimplemented command '$invname'" >&2; fi
 }
 
-startdir=$HOME
 invname=${0##*/}
 invdir=${0%/*}
 
