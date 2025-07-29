@@ -101,7 +101,7 @@ main ()
 
 	if [[ $(declare -F $invname) ]]
 	then $invname "${args[@]}"
-	else echo "unimplemented command '$invname'" >&2; fi
+	else bomb "unimplemented command '$invname'"; fi
 }
 
 invname=${0##*/}
