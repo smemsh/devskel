@@ -107,3 +107,4 @@ main ()
 invname=${0##*/}
 invdir=${0%/*}
 
+main "$@"
