@@ -72,7 +72,7 @@ process_args ()
 	(-b|--optflag_b) let "opts |= $optb"; shift;;
 	(-c|--optarg_c) shift; optc="${1:-default_value}"; shift;;
 	(-d|--optarg_d) shift; optd="${1}"; shift;;
-	(-h|--help) usage; true; exit;;
+	(-h|--help) usage; exit;;
 	(-h|--help) cat <<- %
 		help text
 		%
