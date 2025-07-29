@@ -104,7 +104,7 @@ main ()
 	else bomb "unimplemented command '$invname'"; fi
 }
 
-invname=${0##*/}
+invname=${0##*/} # 0.8.0
 invdir=${0%/*}
 
 main "$@"
