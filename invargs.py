@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.8.0'
+__devskel__ = '0.8.1'
 
 from sys import exit, hexversion
 if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
@@ -94,10 +94,12 @@ def process_args():
         options = list(("-%s --%s" % (flagchar, longopt)).split())
         p.add_argument(*options, help=help, **kwargs)
 
-    def addarg(p, vname, vdesc, help=None, /, **kwargs):
-        p.add_argument(vname, metavar=vdesc, help=help, **kwargs)
-        # if no need for different name in help than code
-        #p.add_argument(vname, help=help, **kwargs)
+    # tmpl metavar
+    #def addarg(p, vname, vdesc, help=None, /, **kwargs):
+    #    p.add_argument(vname, metavar=vdesc, help=help, **kwargs)
+
+    def addarg(p, vname, help=None, /, **kwargs):
+        p.add_argument(vname, help=help, **kwargs)
 
     def addflag(*args, **kwargs):
         addopt(*args, action='store_true', **kwargs)
