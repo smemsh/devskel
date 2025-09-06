@@ -24,6 +24,17 @@ err     () { echo "${FUNCNAME[1]}: ${*}" >&2; }
 
 isset   () { ((opts & $1)); } # tmpl isset
 
+# tmpl errexit
+set -e
+trap_err () { echo "$FUNCNAME: code $1, line: $2, cmd: \"$3\""; exit $1; }
+trap 'trap_err $? $LINENO "$BASH_COMMAND"' ERR
+
+# tmpl tmpdir
+tmpdir=`mktemp -d`
+chmod 0755 $tmpdir
+trap_exit () { (($1 == 0)) && rm -rf ${tmpdir:?}; }
+trap 'trap_exit $?' EXIT
+
 # text comes from comment header at top of script
 usage_until=invocation1:
 usagex () { usage; false; exit; }
@@ -104,7 +115,7 @@ main ()
 	else bomb "unimplemented command '$invname'"; fi
 }
 
-invname=${0##*/} # 0.8.0
+invname=${0##*/} # 0.9.0
 invdir=${0%/*}
 
 main "$@"
