@@ -7,7 +7,7 @@ __license__ = 'GPL-2.0'
 __devskel__ = '0.9.1'
 
 from sys import exit, hexversion
-if hexversion < 0x030900f0: exit("minpython: %s" % hexversion)
+if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
 
 import argparse # tmpl args
 
@@ -34,8 +34,12 @@ from os import (
 
 ###
 
+def msg(*args, **kwargs):
+    print(*args, **kwargs)
+
 def err(*args, **kwargs):
-    print(*args, file=stderr, **kwargs)
+    kwargs |= {'file': stderr}
+    msg(*args, **kwargs)
 
 def bomb(*args, **kwargs):
     err(*args, **kwargs)
