@@ -228,7 +228,11 @@ if __name__ == "__main__":
 
     # tmpl filter
     # move stdin, pdb needs stdio fds itself
+    outfile = stdout # tmpl pipeout
     stdinfd = stdin.fileno()
+    stdoutfd = stdout.fileno() # tmpl pipeout
+
+    # tmpl filter
     if not isatty(stdinfd):
         try:
             if select([stdin], [], [])[0]:
@@ -240,6 +244,28 @@ if __name__ == "__main__":
             bomb("interrupted")
     else:
         bomb("must supply input on stdin")
+
+    # tmpl pipeout
+    if isatty(stdinfd):
+        # we want either empty or no stdin to trigger json decode error later
+        infile = open(devnull)
+    else:
+        # pdb will need stdio fds, so move and reopen
+        try:
+            if select([stdin], [], [], 0)[0]:
+                infile = open(dup(stdinfd), 'r'); osclose(stdinfd)
+                outfile = open(dup(stdoutfd), 'a'); osclose(stdoutfd)
+                try:
+                    # tty must use fd 0/1 for pdb readline, cpython bug 73582
+                    stdin = open('/dev/tty', 'r')
+                    stdout = open('/dev/tty', 'a')
+                except:
+                    pass  # no ctty, but then pdb would not be in use
+            else:
+                bomb("must supply json or empty data on stdin")
+
+        except KeyboardInterrupt:
+            bomb("interrupted")
 
     from bdb import BdbQuit
     if debug := int(getenv('DEBUG') or 0):
@@ -261,6 +287,19 @@ if __name__ == "__main__":
         try: stdout.flush()
         finally:
             try: stdout.close()
+            finally:
+                try: stderr.flush()
+                except: pass
+                finally: stderr.close()
+    # tmpl pipeout
+    finally:  # cpython bug 55589
+        try:
+            outfile.flush()
+            stdout.flush()
+        finally:
+            try:
+                outfile.close()
+                stdout.close()
             finally:
                 try: stderr.flush()
                 except: pass
