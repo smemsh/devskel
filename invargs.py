@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.9.1'
+__devskel__ = '0.10.0'
 
 from sys import exit, hexversion
 if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
