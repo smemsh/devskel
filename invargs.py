@@ -45,15 +45,6 @@ def bomb(*args, **kwargs):
     err(*args, **kwargs)
     exit(EXIT_FAILURE)
 
-def dprint(*args, **kwargs):
-    if not debug: return
-    err('debug:', *args, **kwargs)
-
-def dprintvar(name, vars):
-    if not debug: return
-    err(f"debug: {name}")
-    pp(vars[name])
-
 # tmpl exe1 simple
 def exe(cmd, **kwargs):
     return check_output(cmd.split(), **kwargs).splitlines()
