@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.10.0'
+__devskel__ = '0.10.1'
 
 from sys import exit, hexversion
 if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
@@ -15,6 +15,7 @@ from tty import setraw # tmpl getchar
 from sys import argv # tmpl args
 from sys import stdin # tmpl filter, getchar
 from sys import stdout, stderr
+from shutil import which # tmpl envspawn
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
 from subprocess import check_output # tmpl exe1
@@ -27,6 +28,7 @@ from os import (
     isatty, dup, # tmpl filter
     getcwd, chdir, makedirs, # tmpl dirs
     access, R_OK, W_OK, # tmpl dirs
+    spawnl, P_WAIT, # tmpl envspawn
     close as osclose, # tmpl filter
     EX_OK as EXIT_SUCCESS,
     EX_SOFTWARE as EXIT_FAILURE,
@@ -66,6 +68,12 @@ def exe(cmd, **kwargs):
     except FileNotFoundError:
         bomb(f"invocation failure: \"{cmd}\", aborting...")
     return r.stdout # tmpl exe2
+
+# tmpl exe3 envspawn
+def envspawn(evar, default, arg):
+    app = getenv(evar, default)
+    cmd = which(app)
+    spawnl(P_WAIT, cmd, basename(app), arg)
 
 ###
 
