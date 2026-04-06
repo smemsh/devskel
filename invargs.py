@@ -40,8 +40,7 @@ def msg(*args, **kwargs):
     print(*args, **kwargs)
 
 def err(*args, **kwargs):
-    kwargs |= {'file': stderr}
-    msg(*args, **kwargs)
+    msg(*args, file=stderr, **kwargs)
 
 def bomb(*args, **kwargs):
     err(*args, **kwargs)
