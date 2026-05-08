@@ -81,7 +81,7 @@ def process_args():
 
     global args
 
-    # tmpl unused
+    # tmpl mandatory (if we do usage-exit within this function)
     def usagex(*args, **kwargs):
         nonlocal p
         p.print_help(file=stderr)
@@ -160,6 +160,10 @@ def process_args():
     # tmpl dirs
     addarg  (p, 'src', 'srcdir')
     addarg  (p, 'dest', 'destdir')
+
+    # tmpl mandatory
+    if args is None: usagex("must supply data on stdin")
+    if not args: usagex("must supply invocation arguments or options")
 
     args = p.parse_args(args)
 
@@ -254,7 +258,9 @@ if __name__ == "__main__":
 
     # tmpl pipeout
     if isatty(stdinfd):
-        # we want either empty or no stdin to trigger json decode error later
+        # tmpl mandatory
+        args = None
+        # we want either empty or no stdin to trigger error later
         infile = open(devnull)
     else:
         # pdb will need stdio fds, so move and reopen
