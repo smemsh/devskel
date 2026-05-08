@@ -305,9 +305,16 @@ if __name__ == "__main__":
     from bdb import BdbQuit
     if debug := int(getenv('DEBUG') or 0):
         import pdb
+        from os import getpid
+        from time import sleep
         from pprint import pp
-        err('debug: enabled')
+        err(f"debug: enabled for pid f{getpid()}")
         unsetenv('DEBUG')  # otherwise forked children hang
+        if debug == 3:
+            # allow attach from pdb since 3.14
+            stopsleep = 0
+            while not stopsleep:
+                sleep(1)
 
     try: main()
     except BdbQuit: bomb("debug: stop")
