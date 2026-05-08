@@ -237,13 +237,13 @@ if __name__ == "__main__":
     invname = basename(argv[0])
     args = argv[1:]
 
-    # tmpl filter
-    # move stdin, pdb needs stdio fds itself
+    # tmpl filter, pipeout
+    # move stdin [tmpl pipeout stdio], pdb needs them itself
     outfile = stdout # tmpl pipeout
     stdinfd = stdin.fileno()
     stdoutfd = stdout.fileno() # tmpl pipeout
 
-    # tmpl filter
+    # tmpl filter (only dup input, must invoke as filter)
     if not isatty(stdinfd):
         try:
             if select([stdin], [], [])[0]:
@@ -256,7 +256,7 @@ if __name__ == "__main__":
     else:
         bomb("must supply data on stdin")
 
-    # tmpl pipeout
+    # tmpl pipeout 1 (dup input+output, optionally invoked as filter)
     if isatty(stdinfd):
         # tmpl mandatory
         args = None
@@ -280,6 +280,27 @@ if __name__ == "__main__":
 
         except KeyboardInterrupt:
             bomb("interrupted")
+    # tmpl pipeout 1 end
+
+    # tmpl pipeout 2 (dup input+output, must invoke as filter)
+    if not isatty(stdinfd) and select([stdin], [], [], 0)[0]:
+        # pdb will need stdio fds, so move and reopen
+        try:
+            infile = open(dup(stdinfd), 'r')
+            outfile = open(dup(stdoutfd), 'a')
+            for f in stdinfd, stdoutfd: osclose(f)
+            try:
+                # tty must use fd 0/1 for pdb readline, cpython bug 73582
+                stdin = open('/dev/tty', 'r')
+                stdout = open('/dev/tty', 'a')
+            except:
+                pass  # no ctty, but then pdb would not be in use
+
+        except KeyboardInterrupt:
+            bomb("interrupted")
+    else:
+        bomb("must supply data on stdin")
+    # tmpl pipeout 2 end
 
     from bdb import BdbQuit
     if debug := int(getenv('DEBUG') or 0):
