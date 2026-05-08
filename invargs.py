@@ -266,8 +266,9 @@ if __name__ == "__main__":
         # pdb will need stdio fds, so move and reopen
         try:
             if select([stdin], [], [], 0)[0]:
-                infile = open(dup(stdinfd), 'r'); osclose(stdinfd)
-                outfile = open(dup(stdoutfd), 'a'); osclose(stdoutfd)
+                infile = open(dup(stdinfd), 'r')
+                outfile = open(dup(stdoutfd), 'a')
+                for f in stdinfd, stdoutfd: osclose(f)
                 try:
                     # tty must use fd 0/1 for pdb readline, cpython bug 73582
                     stdin = open('/dev/tty', 'r')
