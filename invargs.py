@@ -254,7 +254,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             bomb("interrupted")
     else:
-        bomb("must supply input on stdin")
+        bomb("must supply data on stdin")
 
     # tmpl pipeout
     if isatty(stdinfd):
@@ -275,7 +275,7 @@ if __name__ == "__main__":
                 except:
                     pass  # no ctty, but then pdb would not be in use
             else:
-                bomb("must supply json or empty data on stdin")
+                bomb("must supply data on stdin")
 
         except KeyboardInterrupt:
             bomb("interrupted")
