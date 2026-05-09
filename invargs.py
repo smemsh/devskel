@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.11.0'
+__devskel__ = '0.11.1'
 
 from sys import exit, hexversion
 if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
@@ -305,11 +305,12 @@ if __name__ == "__main__":
     from bdb import BdbQuit
     if debug := int(getenv('DEBUG') or 0):
         import pdb
-        from os import getpid
-        from time import sleep
+        from os import getpid # tmpl stopsleep
+        from time import sleep # tmpl stopsleep
         from pprint import pp
         err(f"debug: enabled for pid f{getpid()}")
         unsetenv('DEBUG')  # otherwise forked children hang
+        # tmpl stopsleep
         if debug == 3:
             # allow attach from pdb since 3.14
             stopsleep = 0
