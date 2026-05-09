@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.11.1'
+__devskel__ = '0.11.2'
 
 from sys import exit, hexversion
 if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
@@ -308,7 +308,8 @@ if __name__ == "__main__":
         from os import getpid # tmpl stopsleep
         from time import sleep # tmpl stopsleep
         from pprint import pp
-        err(f"debug: enabled for pid f{getpid()}")
+        err('debug: enabled') # tmpl stopsleep no
+        err(f"debug: enabled for pid f{getpid()}") # tmpl stopsleep
         unsetenv('DEBUG')  # otherwise forked children hang
         # tmpl stopsleep
         if debug == 3:
