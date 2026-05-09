@@ -4,17 +4,15 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.11.2'
+__devskel__ = '0.11.3'
 
-from sys import exit, hexversion
-if hexversion < 0x030a00f0: exit("minpython: %s" % hexversion)
+import sys
+if sys.hexversion < 0x030a00f0:
+    sys.exit("minpython: %s" % sys.hexversion)
 
 import argparse # tmpl args
 
 from tty import setraw # tmpl getchar
-from sys import argv # tmpl args
-from sys import stdin # tmpl filter, getchar
-from sys import stdout, stderr
 from shutil import which # tmpl envspawn
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
@@ -40,11 +38,11 @@ def msg(*args, **kwargs):
     print(*args, **kwargs)
 
 def err(*args, **kwargs):
-    msg(*args, file=stderr, **kwargs)
+    msg(*args, file=sys.stderr, **kwargs)
 
 def bomb(*args, **kwargs):
     err(*args, **kwargs)
-    exit(EXIT_FAILURE)
+    sys.exit(EXIT_FAILURE)
 
 # tmpl exe1 simple
 def exe(cmd, **kwargs):
@@ -84,8 +82,8 @@ def process_args():
     # tmpl mandatory (if we do usage-exit within this function)
     def usagex(*args, **kwargs):
         nonlocal p
-        p.print_help(file=stderr)
-        print(file=stderr)
+        p.print_help(file=sys.stderr)
+        print(file=sys.stderr)
         bomb(*args, **kwargs)
 
     # parse_args() gives escaped strings
@@ -124,10 +122,10 @@ def process_args():
 
     # tmpl getchar
     def getchar():
-        fd = stdin.fileno()
+        fd = sys.stdin.fileno()
         tattrs = tcgetattr(fd)
         setraw(fd)
-        c = stdin.buffer.raw.read(1).decode(stdin.encoding)
+        c = sys.stdin.buffer.raw.read(1).decode(sys.stdin.encoding)
         tcsetattr(fd, TCSADRAIN, tattrs)
         return c
 
@@ -183,7 +181,7 @@ def process_args():
     if args.ask:
         action = 'test' if args.dryrun else 'do_something'
         print(f"{action} '{src}/ -> '{dst}/' (y/n)? ", end='')
-        stdout.flush()
+        sys.stdout.flush()
         yn = getchar(); print(yn)
         if yn != 'y': bomb('aborting')
 
@@ -234,22 +232,23 @@ def main():
 
 if __name__ == "__main__":
 
-    invname = basename(argv[0])
-    args = argv[1:]
+    # tmpl args
+    invname = basename(sys.argv[0])
+    args = sys.argv[1:]
 
     # tmpl filter, pipeout
     # move stdin [tmpl pipeout stdio], pdb needs them itself
-    outfile = stdout # tmpl pipeout
-    stdinfd = stdin.fileno()
-    stdoutfd = stdout.fileno() # tmpl pipeout
+    outfile = sys.stdout # tmpl pipeout
+    stdinfd = sys.stdin.fileno()
+    stdoutfd = sys.stdout.fileno() # tmpl pipeout
 
     # tmpl filter (only dup input, must invoke as filter)
     if not isatty(stdinfd):
         try:
-            if select([stdin], [], [])[0]:
+            if select([sys.stdin], [], [])[0]:
                 infile = open(dup(stdinfd))
                 osclose(stdinfd)  # cpython bug 73582
-                try: stdin = open('/dev/tty')
+                try: sys.stdin = open('/dev/tty')
                 except: pass  # no ctty, but then pdb would not be in use
         except KeyboardInterrupt:
             bomb("interrupted")
@@ -265,14 +264,14 @@ if __name__ == "__main__":
     else:
         # pdb will need stdio fds, so move and reopen
         try:
-            if select([stdin], [], [], 0)[0]:
-                infile = open(dup(stdinfd), 'r')
+            if select([sys.stdin], [], [], 0)[0]:
+                infile = open(dup(sys.stdinfd), 'r')
                 outfile = open(dup(stdoutfd), 'a')
                 for f in stdinfd, stdoutfd: osclose(f)
                 try:
                     # tty must use fd 0/1 for pdb readline, cpython bug 73582
-                    stdin = open('/dev/tty', 'r')
-                    stdout = open('/dev/tty', 'a')
+                    sys.stdin = open('/dev/tty', 'r')
+                    sys.stdout = open('/dev/tty', 'a')
                 except:
                     pass  # no ctty, but then pdb would not be in use
             else:
@@ -283,7 +282,7 @@ if __name__ == "__main__":
     # tmpl pipeout 1 end
 
     # tmpl pipeout 2 (dup input+output, must invoke as filter)
-    if not isatty(stdinfd) and select([stdin], [], [], 0)[0]:
+    if not isatty(stdinfd) and select([sys.stdin], [], [], 0)[0]:
         # pdb will need stdio fds, so move and reopen
         try:
             infile = open(dup(stdinfd), 'r')
@@ -291,8 +290,8 @@ if __name__ == "__main__":
             for f in stdinfd, stdoutfd: osclose(f)
             try:
                 # tty must use fd 0/1 for pdb readline, cpython bug 73582
-                stdin = open('/dev/tty', 'r')
-                stdout = open('/dev/tty', 'a')
+                sys.stdin = open('/dev/tty', 'r')
+                sys.stdout = open('/dev/tty', 'a')
             except:
                 pass  # no ctty, but then pdb would not be in use
 
@@ -324,27 +323,27 @@ if __name__ == "__main__":
     except KeyboardInterrupt: bomb("interrupted")
     except:
         from traceback import print_exc
-        print_exc(file=stderr)
+        print_exc(file=sys.stderr)
         if debug: pdb.post_mortem()
         else: bomb("aborting...")
     finally:  # cpython bug 55589
-        try: stdout.flush()
+        try: sys.stdout.flush()
         finally:
-            try: stdout.close()
+            try: sys.stdout.close()
             finally:
-                try: stderr.flush()
+                try: sys.stderr.flush()
                 except: pass
-                finally: stderr.close()
+                finally: sys.stderr.close()
     # tmpl pipeout
     finally:  # cpython bug 55589
         try:
             outfile.flush()
-            stdout.flush()
+            sys.stdout.flush()
         finally:
             try:
                 outfile.close()
-                stdout.close()
+                sys.stdout.close()
             finally:
-                try: stderr.flush()
+                try: sys.stderr.flush()
                 except: pass
-                finally: stderr.close()
+                finally: sys.stderr.close()
