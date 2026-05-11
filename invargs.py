@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.12.0'
+__devskel__ = '0.12.1'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -210,7 +210,7 @@ def check_sanity(src, dst):
 
     # tmpl uplink
     if not uplink(wait=21600):
-        bomb(f"no uplink after 0.25 days")
+        bomb(f"no uplink after {wait}s")
 
 
 # tmpl uplink
