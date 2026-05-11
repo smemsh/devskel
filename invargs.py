@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.11.3'
+__devskel__ = '0.11.4'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -17,7 +17,8 @@ from shutil import which # tmpl envspawn
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
 from subprocess import check_output # tmpl exe1
-from subprocess import run, CalledProcessError # tmpl exe2
+from subprocess import run # tmpl exe2
+from subprocess import CalledProcessError # tmpl exe1, exe2
 
 from os.path import basename
 from os.path import dirname, isdir, exists, abspath # tmpl dirs
