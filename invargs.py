@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.11.4'
+__devskel__ = '0.12.0'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -13,11 +13,13 @@ if sys.hexversion < 0x030a00f0:
 import argparse # tmpl args
 
 from tty import setraw # tmpl getchar
+from time import sleep, monotonic # tmpl uplink
 from shutil import which # tmpl envspawn
 from select import select # tmpl filter
 from termios import tcgetattr, tcsetattr, TCSADRAIN # tmpl getchar
 from subprocess import check_output # tmpl exe1
 from subprocess import run # tmpl exe2
+from subprocess import call, DEVNULL # tmpl uplink
 from subprocess import CalledProcessError # tmpl exe1, exe2
 
 from os.path import basename
@@ -205,6 +207,27 @@ def check_sanity(src, dst):
 
     if not access(dst, W_OK):
         bomb(f"cannot write to destdir '{dst}'")
+
+    # tmpl uplink
+    if not uplink(wait=21600):
+        bomb(f"no uplink after 0.25 days")
+
+
+# tmpl uplink
+def uplink(count=3, delay=100, wait=None, secs=60, host='8.8.8.8'):
+    sofar = 0
+    if wait and wait <= secs:
+        bomb("wait must exceed secs")
+    while True:
+        start = monotonic()
+        cmd = f"ping -i{delay / 1000} -c{count} -w3 {host}"
+        if call(cmd.split(), stdout=DEVNULL) == EXIT_SUCCESS: return True
+        if wait is None: return False
+        if wait > 0:
+            sofar += monotonic() - start
+            if sofar >= wait: return False
+        sleep(secs)
+        sofar += secs
 
 ###
 
