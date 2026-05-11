@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.12.1'
+__devskel__ = '0.12.2'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -147,7 +147,7 @@ def process_args():
 
     p = argparse.ArgumentParser(
         prog            = invname,
-        description     = __doc__.strip(),
+        description     = __doc__.split("\ntodo:")[0].strip(),
         allow_abbrev    = False,
         formatter_class = argparse.RawTextHelpFormatter,
         # tmpl
