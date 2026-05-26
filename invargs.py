@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.12.3'
+__devskel__ = '0.13.0'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -164,7 +164,7 @@ def process_args():
     addarg  (p, 'dest', 'destdir')
 
     # tmpl mandatory
-    if args is None: usagex("must supply data on stdin")
+    if args is None: usagex("must supply data on stdin") # tmpl filter, pipeout
     if not args: usagex("must supply invocation arguments or options")
 
     args = p.parse_args(args)
@@ -263,8 +263,11 @@ if __name__ == "__main__":
 
     # tmpl filter, pipeout
     # move stdin [tmpl pipeout stdio], pdb needs them itself
-    outfile = sys.stdout # tmpl pipeout
-    stdinfd = sys.stdin.fileno()
+    infile = sys.stdin           # tmpl ttydebug (text mode)
+    infile = sys.stdin.buffer    # tmpl ttydebug (binary mode)
+    outfile = sys.stdout         # tmpl filter, pipeout, ttydebug (text mode)
+    outfile = sys.stdout.buffer  # tmpl filter, pipeout, ttydebug (binary mode)
+    stdinfd = sys.stdin.fileno() # tmpl filter, pipeout
     stdoutfd = sys.stdout.fileno() # tmpl pipeout
 
     # tmpl filter (only dup input, must invoke as filter)
@@ -327,19 +330,49 @@ if __name__ == "__main__":
     # tmpl pipeout 2 end
 
     if debug := int(getenv('DEBUG') or 0):
-        import pdb
         from os import getpid # tmpl stopsleep
+        from pdb import Pdb
         from time import sleep # tmpl stopsleep
         from pprint import pp
+        from inspect import currentframe # tmpl ttydebug
+        # tmpl ttydebug start
+
+        class TtyDebugger:
+            def __init__(self):
+                self.pdb = None
+
+            def _get_pdb(self):
+                if self.pdb is None:
+                    pdbin = open('/dev/tty', 'r')
+                    pdbout = open('/dev/tty', 'a')
+                    self.pdb = Pdb(stdin=pdbin, stdout=pdbout)
+                return self.pdb
+
+            def breakpointhook(self):
+                frame = currentframe().f_back  # breakpoint() caller
+                self._get_pdb().set_trace(frame)
+
+            def post_mortem(self):
+                pdb = self._get_pdb()
+                pdb.reset()
+                pdb.interaction(None, sys.exception())
+
+        # tmpl ttydebug end
         err('debug: enabled') # tmpl stopsleep no
         err(f"debug: enabled for pid {getpid()}") # tmpl stopsleep
         unsetenv('DEBUG')  # otherwise forked children hang
-        # tmpl stopsleep
+        # tmpl ttydebug start
+        debugger = TtyDebugger()
+        sys.breakpointhook = debugger.breakpointhook
+        post_mortem = debugger.post_mortem
+        # tmpl ttydebug end
+        # tmpl stopsleep start
         if debug == 3:
             # allow attach from pdb since 3.14
             stopsleep = 0
             while not stopsleep:
                 sleep(1)
+        # tmpl stopsleep end
 
     try: main()
     except BdbQuit: bomb("debug: stop")
@@ -348,7 +381,7 @@ if __name__ == "__main__":
     except:
         from traceback import print_exc
         print_exc(file=sys.stderr)
-        if debug: pdb.post_mortem()
+        if debug: post_mortem()
         else: bomb("aborting...")
     finally:  # cpython bug 55589
         try: sys.stdout.flush()
