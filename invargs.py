@@ -13,6 +13,7 @@ if sys.hexversion < 0x030a00f0:
 import argparse # tmpl args
 
 from tty import setraw # tmpl getchar
+from bdb import BdbQuit
 from time import sleep, monotonic # tmpl uplink
 from shutil import which # tmpl envspawn
 from select import select # tmpl filter
@@ -325,7 +326,6 @@ if __name__ == "__main__":
         bomb("must supply data on stdin")
     # tmpl pipeout 2 end
 
-    from bdb import BdbQuit
     if debug := int(getenv('DEBUG') or 0):
         import pdb
         from os import getpid # tmpl stopsleep
