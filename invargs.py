@@ -83,7 +83,7 @@ def process_args():
 
     global args
 
-    # tmpl mandatory (if we do usage-exit within this function)
+    # tmpl mandargs (if we do usage-exit within this function)
     def usagex(*args, **kwargs):
         nonlocal p
         p.print_help(file=sys.stderr)
@@ -163,7 +163,7 @@ def process_args():
     addarg  (p, 'src', 'srcdir')
     addarg  (p, 'dest', 'destdir')
 
-    # tmpl mandatory
+    # tmpl mandargs
     if args is None: usagex("must supply data on stdin") # tmpl filter, pipeout
     if not args: usagex("must supply invocation arguments or options")
 
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
     # tmpl pipeout 1 (dup input+output, optionally invoked as filter)
     if isatty(stdinfd):
-        # tmpl mandatory
+        # tmpl mandargs
         args = None
         # we want either empty or no stdin to trigger error later
         infile = open(devnull)
