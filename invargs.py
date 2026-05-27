@@ -4,7 +4,7 @@
 __url__     = 'https://github.com/smemsh/devskel/'
 __author__  = 'Scott Mcdermott <scott@smemsh.net>'
 __license__ = 'GPL-2.0'
-__devskel__ = '0.13.0'
+__devskel__ = '0.13.1'
 
 import sys
 if sys.hexversion < 0x030a00f0:
@@ -164,7 +164,8 @@ def process_args():
     addarg  (p, 'dest', 'destdir')
 
     # tmpl mandargs
-    if args is None: usagex("must supply data on stdin") # tmpl filter, pipeout
+    # tmpl filter, pipeout, blockinput
+    if args is None: usagex("must supply data on stdin")
     if not args: usagex("must supply invocation arguments or options")
 
     args = p.parse_args(args)
@@ -269,6 +270,10 @@ if __name__ == "__main__":
     outfile = sys.stdout.buffer  # tmpl filter, pipeout, ttydebug (binary mode)
     stdinfd = sys.stdin.fileno() # tmpl filter, pipeout
     stdoutfd = sys.stdout.fileno() # tmpl pipeout
+
+    # tmpl mandargs, blockinput
+    if isatty(stdinfd) or not select([sys.stdin], [], [], 0)[0]:
+        args = None
 
     # tmpl filter (only dup input, must invoke as filter)
     if not isatty(stdinfd):
